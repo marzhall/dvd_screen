@@ -1,0 +1,67 @@
+( devices )
+|00 @System  [ &vector $2 &pad      $6  &r      $2 &g     $2 &b      $2 ]
+|20 @Screen  [ &vector $2 &width $2 &height $2 &pad   $2 &x $2 &y  $2 &addr $2 &pixel $1 &sprite $1 ]
+
+( a -- a+1 )
+%ADD-X {
+    .Screen/x DEI2
+    ADD2
+    .Screen/x DEO2
+}
+
+( a -- a-1 )
+%SUB-X {
+    .Screen/x DEI2
+    SWP2
+    SUB2
+    .Screen/x DEO2
+}
+
+%ADD-Y {
+    .Screen/y DEI2
+    ADD2
+    .Screen/y DEO2
+}
+
+
+( main program )
+|0100
+      ( set system colors )
+      #2ce9 .System/r DEO2
+      #01c0 .System/g DEO2
+      #2ce5 .System/b DEO2
+
+      ( draw dvd )
+      #0030 .Screen/x DEO2
+      #0030 .Screen/y DEO2
+      ;dee .Screen/addr DEO2
+      #01 .Screen/sprite DEO
+
+      #000a ADD-X
+      ;vee .Screen/addr DEO2
+      #01 .Screen/sprite DEO
+
+      #000a ADD-X
+      ;dee .Screen/addr DEO2
+      #01 .Screen/sprite DEO
+
+      ( draw line )
+      #0015 SUB-X
+      #0008 ADD-Y
+      ;line .Screen/addr DEO2
+      #01 .Screen/sprite DEO
+
+      #0008 ADD-X
+      #01 .Screen/sprite DEO
+
+      #0008 ADD-X
+      #01 .Screen/sprite DEO
+
+      #0005 ADD-X
+      #01 .Screen/sprite DEO
+
+BRK
+      
+@dee fcc6 c3c3 c3c3 c6fc
+@vee c3c3 6666 243c 3c18
+@line 0000 00ff ff00 0000

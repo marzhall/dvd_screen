@@ -17,12 +17,17 @@
     .Screen/x DEO2
 }
 
+( a -- a+1 )
 %ADD-Y {
     .Screen/y DEI2
     ADD2
     .Screen/y DEO2
 }
 
+( zero page )
+|0000
+@dvd-loc [ &x $2 &y $2 ]
+@dvd-direction [ &x $2 &y $2 ]
 
 ( main program )
 |0100
@@ -31,9 +36,29 @@
       #01c0 .System/g DEO2
       #2ce5 .System/b DEO2
 
-      ( draw dvd )
-      #0030 .Screen/x DEO2
-      #0030 .Screen/y DEO2
+      ( set initial dvd location )
+      #0000 .dvd-loc/x STZ2
+      #0000 .dvd-loc/y STZ2
+
+      ;on-frame .Screen/vector DEO2
+BRK
+
+@on-frame ( -> )
+      .dvd-loc/x LDZ2
+      .Screen/x DEO2
+
+      .dvd-loc/x LDZ2
+       INC2
+      .dvd-loc/x STZ2
+
+      .dvd-loc/y LDZ2
+      .Screen/y DEO2
+
+      .dvd-loc/y LDZ2
+       INC2
+      .dvd-loc/y STZ2
+
+      ( draw DVD )
       ;dee .Screen/addr DEO2
       #01 .Screen/sprite DEO
 

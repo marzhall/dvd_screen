@@ -24,6 +24,8 @@
     .Screen/y DEO2
 }
 
+%RTN { JMP2r }
+
 ( zero page )
 |0000
 @dvd-loc [ &x $2 &y $2 ]
@@ -37,56 +39,75 @@
       #2ce5 .System/b DEO2
 
       ( set initial dvd location )
-      #0000 .dvd-loc/x STZ2
-      #0000 .dvd-loc/y STZ2
+      #00ff .dvd-loc/x STZ2
+      #00ff .dvd-loc/y STZ2
 
+      ( set initial dvd direction )
+      #0001 .dvd-direction/x STZ2
+      #8001 .dvd-direction/y STZ2
+
+      #0fff #8001 ;add2-signed JSR2
       ;on-frame .Screen/vector DEO2
 BRK
 
 @on-frame ( -> )
-      .dvd-loc/x LDZ2
-      .Screen/x DEO2
+    .dvd-loc/x LDZ2
+    .dvd-direction/x LDZ2
+    ;add2-signed JSR2
+    DUP2
+    .dvd-loc/x STZ2
+    .Screen/x DEO2
 
-      .dvd-loc/x LDZ2
-       INC2
-      .dvd-loc/x STZ2
+    .dvd-loc/y LDZ2
+    .dvd-direction/y LDZ2
+    ;add2-signed JSR2
+    DUP2
+    .Screen/y DEO2
+    .dvd-loc/y STZ2
 
-      .dvd-loc/y LDZ2
-      .Screen/y DEO2
+    ( draw the DVD symbol )
+    ;dee .Screen/addr DEO2
+    #01 .Screen/sprite DEO
 
-      .dvd-loc/y LDZ2
-       INC2
-      .dvd-loc/y STZ2
+    #000a ADD-X
+    ;vee .Screen/addr DEO2
+    #01 .Screen/sprite DEO
 
-      ( draw DVD )
-      ;dee .Screen/addr DEO2
-      #01 .Screen/sprite DEO
+    #000a ADD-X
+    ;dee .Screen/addr DEO2
+    #01 .Screen/sprite DEO
 
-      #000a ADD-X
-      ;vee .Screen/addr DEO2
-      #01 .Screen/sprite DEO
+    ( draw the underscore line )
+    #0015 SUB-X
+    #0008 ADD-Y
+    ;line .Screen/addr DEO2
+    #01 .Screen/sprite DEO
 
-      #000a ADD-X
-      ;dee .Screen/addr DEO2
-      #01 .Screen/sprite DEO
+    #0008 ADD-X
+    #01 .Screen/sprite DEO
 
-      ( draw line )
-      #0015 SUB-X
-      #0008 ADD-Y
-      ;line .Screen/addr DEO2
-      #01 .Screen/sprite DEO
+    #0008 ADD-X
+    #01 .Screen/sprite DEO
 
-      #0008 ADD-X
-      #01 .Screen/sprite DEO
-
-      #0008 ADD-X
-      #01 .Screen/sprite DEO
-
-      #0005 ADD-X
-      #01 .Screen/sprite DEO
-
+    #0005 ADD-X
+    #01 .Screen/sprite DEO
 BRK
-      
+
 @dee fcc6 c3c3 c3c3 c6fc
 @vee c3c3 6666 243c 3c18
 @line 0000 00ff ff00 0000
+
+@add2-signed ( a [ signed b ] -- a +/- [ signed b ] )
+    DUP2
+    #8000 AND2
+    POP
+    ,&negative-add2 JCN
+
+    ( if we're positive )
+    ADD2
+    RTN
+
+    &negative-add2
+        #8000 EOR2
+        SUB2
+        RTN

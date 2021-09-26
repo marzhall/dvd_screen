@@ -1,9 +1,9 @@
-DVD screensaver for uxn.
+# DVD screensaver for uxn.
 
 WIP - quick project fo learning UXN assembly.
 
-Thanks to the compudaza tutorial: https://compudanzas.net/uxn_tutorial_day_1.html
+Thanks to:
 
-UXN: https://git.sr.ht/~rabbits/uxn
-
-and metasyn's UXN-in-the-browser: https://metasyn.github.io/learn-uxn/#
+- 100 Rabbits for UXN: https://git.sr.ht/~rabbits/uxn
+- The compudaza tutorial: https://compudanzas.net/uxn_tutorial_day_1.html
+- Metasyn's UXN-in-the-browser: https://metasyn.github.io/learn-uxn/#

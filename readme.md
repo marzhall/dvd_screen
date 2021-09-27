@@ -1,6 +1,8 @@
 # DVD screensaver for uxn.
 
-WIP - quick project fo learning UXN assembly.
+![example-gif](https://raw.githubusercontent.com/marzhall/dvd_screen/main/dvd_example.gif)
+
+WIP - quick project for learning UXN assembly.
 
 Thanks to:
 
